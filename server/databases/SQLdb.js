@@ -17,11 +17,12 @@ qadb.connectAsync()
     const queryQ = `CREATE TABLE IF NOT EXISTS questions(
     id INT NOT NULL AUTO_INCREMENT,
     product_id INT NOT NULL,
-    question_body TEXT NOT NULL,
-    qustion_date VARCHAR(150) NOT NULL,
+    body TEXT NOT NULL,
+    date_written VARCHAR(150) NOT NULL,
     asker_name VARCHAR(60) NOT NULL,
-    question_helpfulness INT NOT NULL DEFAULT 0,
+    asker_email VARCHAR(60) NOT NULL,
     reported BOOLEAN DEFAULT 0,
+    helpful INT NOT NULL DEFAULT 0,
     PRIMARY KEY(id))`;
     qadb.queryAsync(queryQ);
   })
@@ -30,9 +31,11 @@ qadb.connectAsync()
     id INT NOT NULL AUTO_INCREMENT,
     question_id INT NOT NULL,
     body TEXT NOT NULL,
-    date VARCHAR(150) NOT NULL,
+    date_written BIGINT NOT NULL,
     answerer_name VARCHAR(60) NOT NULL,
-    helpfulness INT NOT NULL DEFAULT 0,
+    answerer_email VARCHAR(60) NOT NULL,
+    reported BOOLEAN DEFAULT 0,
+    helpful INT NOT NULL DEFAULT 0,
     PRIMARY KEY(id))`
     qadb.queryAsync(queryA);
   })
@@ -40,7 +43,7 @@ qadb.connectAsync()
     const queryP = `CREATE TABLE IF NOT EXISTS answer_pics(
       id INT NOT NULL AUTO_INCREMENT,
       answer_id INT NOT NULL,
-      pic_url VARCHAR(250),
+      url VARCHAR(250),
       PRIMARY KEY(id))`;
     qadb.queryAsync(queryP);
   })
