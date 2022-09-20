@@ -1,47 +1,68 @@
-const { QandA, Quest, Answer, Pic } = require('../databases/MONGOdb.js');
+const { Quest } = require('../databases/MONGOdb.js');
+var ObjectId = require('mongoose').Types.ObjectId;
 
-const createMany = (data) => {
+exports.createMany = (data) => {
   const cb = (err, result) => {
     if (err){
       console.log(err);
     } else {
       if (data.length > 0) {
         let batch = data.splice(0, 100);
-        QandA.insertMany(batch, cb);
+        Quest.insertMany(batch, cb);
       } else {
         console.log('done inserting');
       }
     }
   }
   let firstBatch = data.splice(0, 100);
-  QandA.insertMany(firstBatch, cb);
+  Quest.insertMany(firstBatch, cb);
 };
 
-const createOne = (data, callback) => {
+exports.createOne = (data, callback) => {
   //form the data as necessary
   //QandA.create({ info: , answers []})
 };
 
-const insertQuestion = (data, callback) => {
-  //look up given product_id
-  //navigate to questions array
-  //insert new question
+exports.insertQuestion = (question, callback) => {
+  Quest.create(question, (err, result) => {
+    if(err){
+      callback(err);
+    }else {
+      console.log('question added');
+      callback(null);
+    }
+  })
 };
 
-const checkNewQuestion = (questionReq, callback) => {
-  //check if provided productID exist in db
-  //if yes
-    //call insert question
-    //successful? callback with data
-  //otherwise
-    //call create one
-    //successful? callback with data
-};
-
-const insertAnswer = (answerReq, callback) => {
-  //lookup given questonID
+exports.insertAnswer = (answer, id, callback) => {
+  Quest.findOneAndUpdate({ _id: id }, { $push: {answers: answer} }, (err) => {
+    if(err) {
+      callback(err);
+    }else {
+      callback(null);
+    }
+  })
   //navigate to answersarray
   //insert new answer
 }
 
-exports.createMany = createMany;
+exports.findQuestions = (id, count, callback) => {
+  Quest.find({product_id: id}).limit(count).exec((err, results) => {
+    if(err) {
+      callback(err);
+    } else {
+      callback(null, results);
+    }
+  })
+}
+
+exports.findAnswers = (id, count, callback) => {
+  Quest.find({ _id: id}).select('answers').exec((err, result) => {
+    if(err) {
+      callback(err);
+    } else {
+      console.log(result);
+      callback(null, result);
+    }
+  });
+}

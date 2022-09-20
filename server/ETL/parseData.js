@@ -47,6 +47,7 @@ fs.createReadStream('/Users/amberly/hackreactorSEI/Q-and-A-server/server/oldData
       .pipe(csv())
       .on('data', (row) => {
         let currentRow = {
+          product_id: row.product_id,
           body: row.body,
           date_written: parseInt(row.date_written),
           asker_name: row.asker_name,
@@ -55,16 +56,9 @@ fs.createReadStream('/Users/amberly/hackreactorSEI/Q-and-A-server/server/oldData
           helpful: parseInt(row.helpful),
           answers: answerResults[row.id] || []
         };
-        if(qaData[row.product_id]){
-          qaData[row.product_id].questions.push(currentRow)
-        } else {
-          qaData[row.product_id] = {_id: row.product_id, questions: [currentRow]};
-        }
+      readyData.push(currentRow);
     })
       .on('end', () => {
-        for(var key in qaData) {
-          readyData.push(qaData[key]);
-        }
         model.createMany(readyData);
       })
     })

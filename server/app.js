@@ -3,6 +3,9 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 
+//require
+const controller = require('./controller.js');
+
 //connect
 const app = express();
 app.use(express.static(path.join(__dirname, '')))//fix this
@@ -15,22 +18,48 @@ app.use(express.json());
 //get all questions for given product_id//
 app.get('/qa/questions', (req, res) => {
   //grab product_id, page, and count from req.query
-  //speak to controller
+  controller.getAllquestions(req.query, (err, results) => {
+    if(err){
+      res.sendStatus(401);
+    } else {
+      res.status(200).json(results);
+    }
+  })
 })
 //get all answers for given question_id//
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   //grab question_id from req.params.question_id
   //grab page and count from req.query
+  controller.getAllAnswers(req, (err, results) => {
+    if(err){
+      res.sendStatus(401);
+    } else {
+      res.status(200).json(results);
+    }
+  })
 })
 //post new question for given product_id//
 app.post('/qa/questions', (req, res) => {
-  //grab body, name, email, product_id from req.body
+  //grab body, name, email, product_id from req.body.
+  controller.addOneQuestion(req.body, (err) => {
+    if(err){
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(201);
+    }
+  })
 })
 //post new answer for gicen question_id
 app.post('/qa/questions/:question_id/answers', (req, res) => {
   //grab question_id from req.params.questions_id
   //grab body, name, email, photos from req.body
-  //speak to model
+  controller.addOneAnswer(req, (err) => {
+    if(err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(201);
+    }
+  })
 })
 //increment helpful count of given question_id
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
