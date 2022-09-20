@@ -8,6 +8,9 @@ exports.getAllquestions = (reqQuery, callback) => {
     if(err) {
       callback(err);
     } else {
+      results.map((question) => {
+        question.answers = question.answers.filter(elem => elem.reported === false);
+      });
       callback(null, results);
     }
   })
@@ -20,7 +23,8 @@ exports.getAllAnswers = (request, callback) => {
     if(err) {
       callback(err);
     } else {
-      callback(null, results);
+      const resolve = results[0].answers.filter(elem => elem.reported === false);
+      callback(null, resolve.slice(0,count));
     }
   })
 }

@@ -42,6 +42,17 @@ exports.insertAnswer = (answer, id, callback) => {
 }
 
 exports.findQuestions = (id, count, callback) => {
+  // Quest.aggregate([
+  //   {$match: {product_id: id}}
+  //   // {$addFields: {question_id: "$_id"}}
+  //   // {$project: {_id: 0} }
+  // ], (err, results) => {
+  //   if(err) {
+  //     callback(err);
+  //   } else {
+  //     callback(null, results);
+  //   }
+  // })
   Quest.find({product_id: id, reported: false}).limit(count).exec((err, results) => {
     if(err) {
       callback(err);
@@ -52,22 +63,14 @@ exports.findQuestions = (id, count, callback) => {
 }
 
 exports.findAnswers = (id, count, callback) => {
-  Quest.find({ _id: id }).select('answers').exec((err, result) => {
+  Quest.find({ _id: id }).select('answers').exec((err, results) => {
     if(err) {
       callback(err);
     } else {
-      const resolve = result[0].answers.filter(elem => elem.reported === false);
-      callback(null, resolve.slice(0,count));
+      callback(null, results);
     }
   });
-  // Quest.find({ _id: id}, {}).select('answers').exec((err, result) => {
-  //   if(err) {
-  //     callback(err);
-  //   } else {
-  //     console.log(result);
-  //     callback(null, result);
-  //   }
-  // });
+
 }
 
 exports.incQHelpful = (id, callback) => {
@@ -88,13 +91,7 @@ exports.updateQReport = (id, callback) => {
       callback(null);
     }
   })
-  // Quest.deleteOne({_id: id }, (err) => {
-  //   if(err) {
-  //     callback(err);
-  //   } else {
-  //     callback(null);
-  //   }
-  // })
+
 }
 
 exports.incAHelpful = (id, callback) => {
@@ -115,11 +112,4 @@ exports.updateAReport = (id, callback) => {
       callback(null);
     }
   })
-  // Quest.findOneAndUpdate({ 'answers._id': id }, { $pull: {answers: {_id: id }}}, (err) => {
-  //   if(err) {
-  //     callback(err);
-  //   }else {
-  //     callback(null);
-  //   }
-  // })
 }
