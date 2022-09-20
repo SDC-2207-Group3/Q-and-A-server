@@ -1,4 +1,5 @@
 const { Quest } = require('../databases/MONGOdb.js');
+const underscore = require('underscore');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createMany = (data) => {
@@ -18,10 +19,6 @@ exports.createMany = (data) => {
   Quest.insertMany(firstBatch, cb);
 };
 
-exports.createOne = (data, callback) => {
-  //form the data as necessary
-  //QandA.create({ info: , answers []})
-};
 
 exports.insertQuestion = (question, callback) => {
   Quest.create(question, (err, result) => {
@@ -42,12 +39,10 @@ exports.insertAnswer = (answer, id, callback) => {
       callback(null);
     }
   })
-  //navigate to answersarray
-  //insert new answer
 }
 
 exports.findQuestions = (id, count, callback) => {
-  Quest.find({product_id: id}).limit(count).exec((err, results) => {
+  Quest.find({product_id: id, reported: false}).limit(count).exec((err, results) => {
     if(err) {
       callback(err);
     } else {
@@ -57,12 +52,74 @@ exports.findQuestions = (id, count, callback) => {
 }
 
 exports.findAnswers = (id, count, callback) => {
-  Quest.find({ _id: id}).select('answers').exec((err, result) => {
+  Quest.find({ _id: id }).select('answers').exec((err, result) => {
     if(err) {
       callback(err);
     } else {
-      console.log(result);
-      callback(null, result);
+      const resolve = result[0].answers.filter(elem => elem.reported === false);
+      callback(null, resolve.slice(0,count));
     }
   });
+  // Quest.find({ _id: id}, {}).select('answers').exec((err, result) => {
+  //   if(err) {
+  //     callback(err);
+  //   } else {
+  //     console.log(result);
+  //     callback(null, result);
+  //   }
+  // });
+}
+
+exports.incQHelpful = (id, callback) => {
+  Quest.findOneAndUpdate({ _id: id }, { $inc: {helpful: 1} }, (err) => {
+    if(err) {
+      callback(err);
+    }else {
+      callback(null);
+    }
+  })
+}
+
+exports.updateQReport = (id, callback) => {
+  Quest.findOneAndUpdate({ _id: id }, {reported: true}, (err) => {
+    if(err) {
+      callback(err);
+    }else {
+      callback(null);
+    }
+  })
+  // Quest.deleteOne({_id: id }, (err) => {
+  //   if(err) {
+  //     callback(err);
+  //   } else {
+  //     callback(null);
+  //   }
+  // })
+}
+
+exports.incAHelpful = (id, callback) => {
+  Quest.findOneAndUpdate({ 'answers._id': id }, { $inc: {'answers.$.helpful': 1} }, (err) => {
+    if(err) {
+      callback(err);
+    }else {
+      callback(null);
+    }
+  })
+}
+
+exports.updateAReport = (id, callback) => {
+  Quest.findOneAndUpdate({ 'answers._id': id }, { 'answers.$.reported': true}, (err) => {
+    if(err) {
+      callback(err);
+    }else {
+      callback(null);
+    }
+  })
+  // Quest.findOneAndUpdate({ 'answers._id': id }, { $pull: {answers: {_id: id }}}, (err) => {
+  //   if(err) {
+  //     callback(err);
+  //   }else {
+  //     callback(null);
+  //   }
+  // })
 }

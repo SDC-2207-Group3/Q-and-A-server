@@ -63,19 +63,43 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
 })
 //increment helpful count of given question_id
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
-  //grab question_id from req.params
+  controller.markQHelpful(req, (err) => {
+    if(err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(204);
+    }
+  })
 })
 //mark given question_id as reported (1)//
 app.put('/qa/questions/:question_id/report', (req, res) => {
-  //grab question_id from req.params
+  controller.reportQuestion(req, (err) => {
+    if(err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(204);
+    }
+  })
 })
 //increment helpful count of given answer_id
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
-  //grab answer_id from req.params
+  controller.markAHelpful(req, (err) => {
+    if(err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(204);
+    }
+  })
 })
 //mark given answer_id as reported (1)//
 app.put('/qa/answers/:answer_id/report', (req, res) => {
-  //grab answer_id from req.params
+  controller.reportAnswer(req, (err) => {
+    if(err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(204);
+    }
+  })
 })
 
 app.listen(process.env.PORT, () => {

@@ -12,7 +12,7 @@ const Pic = mongoose.model('Pic', picSchema);
 //=========Answer Schema==========
 const aSchema = new Schema({
   body: String,
-  date_written: Number,
+  date_written: String,
   answerer_name: String,
   answerer_email: String,
   reported: Boolean,
@@ -24,7 +24,7 @@ const Answer = mongoose.model('Answer', aSchema);
 
 //=======Question Schema =============
 const qSchema = new Schema({
-  product_id: Number,
+  product_id: {type: Number, index: true},
   body: String,
   date_written: String,
   asker_name: String,
