@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 const { Schema } = mongoose;
-mongoose.connect('mongodb://localhost/qanda');
+mongoose.connect(process.env.DB_URL);
 
 // //====Answer Picture Schema========
 // const picSchema = new Schema({
