@@ -42,17 +42,6 @@ exports.insertAnswer = (answer, id, callback) => {
 }
 
 exports.findQuestions = (id, count, callback) => {
-  // Quest.aggregate([
-  //   {$match: {product_id: id}}
-  //   // {$addFields: {question_id: "$_id"}}
-  //   // {$project: {_id: 0} }
-  // ], (err, results) => {
-  //   if(err) {
-  //     callback(err);
-  //   } else {
-  //     callback(null, results);
-  //   }
-  // })
   Quest.find({product_id: id, reported: false}).limit(count).exec((err, results) => {
     if(err) {
       callback(err);
@@ -74,7 +63,7 @@ exports.findAnswers = (id, count, callback) => {
 }
 
 exports.incQHelpful = (id, callback) => {
-  Quest.findOneAndUpdate({ _id: id }, { $inc: {helpful: 1} }, (err) => {
+  Quest.findOneAndUpdate({ _id: id }, { $inc: {question_helpful: 1} }, (err) => {
     if(err) {
       callback(err);
     }else {

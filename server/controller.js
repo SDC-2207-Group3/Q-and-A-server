@@ -8,10 +8,26 @@ exports.getAllquestions = (reqQuery, callback) => {
     if(err) {
       callback(err);
     } else {
+      let transformResults = [];
       results.map((question) => {
+        let newQ = JSON.parse(JSON.stringify(question));
+        let newAnswers = {};
         question.answers = question.answers.filter(elem => elem.reported === false);
-      });
-      callback(null, results);
+        for (let answer of question.answers) {
+          answer.id = answer._id.toString();
+          newAnswers[answer.id]= {
+            id: answer.id,
+            body: answer.body,
+            date: answer.date_written,
+            answerer_name: answer.answerer_name,
+            helpful: answer.helpful,
+            photos: answer.photos
+          }
+        }
+        newQ.answers = newAnswers;
+        transformResults.push(newQ);
+      })
+      callback(null, { results: transformResults});
     }
   })
 }
@@ -23,8 +39,19 @@ exports.getAllAnswers = (request, callback) => {
     if(err) {
       callback(err);
     } else {
+      let transformResults = [];
       const resolve = results[0].answers.filter(elem => elem.reported === false);
-      callback(null, resolve.slice(0,count));
+      resolve.forEach((answer) => {
+        transformResults.push({
+          answer_id: answer._id.toString(),
+          body: answer.body,
+          date: answer.date_written,
+          answerer_name: answer.answerer_name,
+          helpful: answer.helpful,
+          photos: answer.photos
+        })
+      })
+      callback(null, { results: transformResults.slice(0, index)});
     }
   })
 }
@@ -32,12 +59,12 @@ exports.getAllAnswers = (request, callback) => {
 exports.addOneQuestion = (reqBody, callback) => {
   const newQuest = {
     product_id: reqBody.product_id,
-    body: reqBody.body,
-    date_written: Date.now(),
+    question_body: reqBody.body,
+    question_date: Date.now(),
     asker_name: reqBody.name,
     asker_email: reqBody.email,
     reported: 0,
-    helpful: 0,
+    question_helpful: 0,
     answers: []
   };
   model.insertQuestion( newQuest, (err) => {
@@ -57,11 +84,8 @@ exports.addOneAnswer = (req, callback) => {
     answerer_email: req.body.email,
     reported: 0,
     helpful: 0,
-    photos: []
+    photos: [req.body.photos]
   };
-  req.body.photos.forEach((url) => {
-    newAnswer.photos.push({url: url});
-  })
   model.insertAnswer( newAnswer, req.params.question_id, (err) => {
     if(err) {
       callback(err);

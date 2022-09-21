@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/app.js",
-    "parser": "node --max-old-space-size=4096 server/ETL/parseData.js"
+    "parser": "node --max-old-space-size=4096 server/ETL/parseData.js",
+    "db-create": "node server/databases/MONGOdb.js",
+    "load-db": "k6 run server/testing/k6.Mongo.js"
   },
   "repository": {
     "type": "git",

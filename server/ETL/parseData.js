@@ -11,11 +11,10 @@ const readyData = [];
 fs.createReadStream('/Users/amberly/hackreactorSEI/Q-and-A-server/server/oldData/answers_photos.csv')
   .pipe(csv())
   .on('data', (row) => {
-    let currentRow = {url: row.url};
     if(answerPics[row.answer_id]){
-      answerPics[row.answer_id].push(currentRow);
+      answerPics[row.answer_id].push(row.url);
      } else {
-      answerPics[row.answer_id] = [currentRow];
+      answerPics[row.answer_id] = [row.url];
     }
   })
   .on('end', () => {
@@ -48,12 +47,12 @@ fs.createReadStream('/Users/amberly/hackreactorSEI/Q-and-A-server/server/oldData
       .on('data', (row) => {
         let currentRow = {
           product_id: row.product_id,
-          body: row.body,
-          date_written: parseInt(row.date_written),
+          question_body: row.body,
+          question_date: parseInt(row.date_written),
           asker_name: row.asker_name,
           asker_email: row.asker_email,
           reported: parseInt(row.reported),
-          helpful: parseInt(row.helpful),
+          question_helpful: parseInt(row.helpful),
           answers: answerResults[row.id] || []
         };
       readyData.push(currentRow);
