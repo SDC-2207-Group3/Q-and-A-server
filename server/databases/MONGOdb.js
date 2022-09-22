@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { Schema } = mongoose;
-mongoose.connect(process.env.DB_URL);
+mongoose.connect(process.env.DB_REMOTE_URI);
 
 // //====Answer Picture Schema========
 // const picSchema = new Schema({
