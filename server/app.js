@@ -15,6 +15,12 @@ app.use(express.json());
 
 // =============== QANDA ROUTES ===============
 
+//loader.io route FOR TESTING ONLY
+app.get(process.env.LOADER, (req, res) => {
+  res.sendStatus(200);
+})
+
+
 //get all questions for given product_id//
 app.get('/qa/questions', (req, res) => {
   //grab product_id, page, and count from req.query
