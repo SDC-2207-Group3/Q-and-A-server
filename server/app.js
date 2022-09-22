@@ -17,7 +17,7 @@ app.use(express.json());
 
 //loader.io route FOR TESTING ONLY
 app.get(process.env.LOADER, (req, res) => {
-  res.sendStatus(200);
+  res.send(process.env.LOADER_TOKEN);
 })
 
 
