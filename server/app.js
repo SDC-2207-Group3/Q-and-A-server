@@ -8,7 +8,7 @@ const controller = require('./controller.js');
 
 //connect
 const app = express();
-app.use(express.static(path.join(__dirname, '')))//fix this
+
 //add middleware
 app.use(morgan('dev'));
 app.use(express.json());
