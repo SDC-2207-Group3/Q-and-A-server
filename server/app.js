@@ -16,9 +16,9 @@ app.use(express.json());
 // =============== QANDA ROUTES ===============
 
 //loader.io route FOR TESTING ONLY
-app.get(process.env.LOADER, (req, res) => {
-  res.send(process.env.LOADER_TOKEN);
-})
+// app.get(process.env.LOADER, (req, res) => {
+//   res.send(process.env.LOADER_TOKEN);
+// })
 
 
 //get all questions for given product_id//
