@@ -10,7 +10,7 @@ const controller = require('./controller.js');
 const app = express();
 
 //add middleware
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 
 // =============== QANDA ROUTES ===============
