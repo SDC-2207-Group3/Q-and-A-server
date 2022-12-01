@@ -1,4 +1,4 @@
-# Atelier Reviews Service - Deployment Instructions
+# Atelier Q and A Service - Deployment Instructions
 
 ### Create Mongo Database
 
